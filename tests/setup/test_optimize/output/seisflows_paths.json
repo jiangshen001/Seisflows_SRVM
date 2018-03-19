@@ -1,9 +1,0 @@
-{
-    "LOCAL": null, 
-    "OPTIMIZE": "/home/liuq0a/software/seisflows/tests/setup/test_optimize/scratch/optimize", 
-    "OUTPUT": "/home/liuq0a/software/seisflows/tests/setup/test_optimize/output", 
-    "SCRATCH": "/home/liuq0a/software/seisflows/tests/setup/test_optimize/scratch", 
-    "SUBMIT": "/home/liuq0a/software/seisflows/tests/setup/test_optimize", 
-    "SYSTEM": "/home/liuq0a/software/seisflows/tests/setup/test_optimize/scratch/system", 
-    "WORKDIR": "/home/liuq0a/software/seisflows/tests/setup/test_optimize"
-}
