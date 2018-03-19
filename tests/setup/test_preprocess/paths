@@ -1,5 +1,5 @@
 
-DATA = '~/seisflows/tests/setup/test_preprocess/data.su'
+DATA = '/home/liuq0a/software/seisflows/tests/setup/test_preprocess/data.su'
 
-SYNTHETICS = '~/seisflows/tests/setup/test_preprocess/synthetics.su'
+SYNTHETICS = '/home/liuq0a/software/seisflows/tests/setup/test_preprocess/synthetics.su'
 

@@ -381,7 +381,7 @@ class base(object):
         s_new = self.loadtxt('s_new')
         s_old = self.loadtxt('s_old')
         s_ratio = s_new/s_old
-        return 2.*s_ratio*alpha
+        return 1.*s_ratio*alpha
 
     def initial_step1(self):
         """ Determines first trial step in line search; see eg Nocedal and 

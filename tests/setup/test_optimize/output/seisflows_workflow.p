@@ -1,0 +1,17 @@
+ccopy_reg
+_reconstructor
+p0
+(cseisflows.workflow.test_optimize
+test_optimize
+p1
+c__builtin__
+object
+p2
+Ntp3
+Rp4
+(dp5
+S'path'
+p6
+S'/home/liuq0a/software/seisflows/tests/setup/test_optimize/scratch/optimize'
+p7
+sb.

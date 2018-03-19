@@ -192,11 +192,101 @@ class base(object):
         self.stepwriter(steplen=0., funcval=f)
 
     def update_SRVM(self):
-        """ Computes model update direction from stored gradient
-        """
-        # must be implemented by subclass
-	raise NotImplementedError
+        self.path=PATH.OPTIMIZE
+        unix.cd(self.path)
 
+	print 'here'
+	if self.iter > 1:
+
+	    g_old = self.load('g_old')
+	    p_old = self.load('p_old')
+	    g = self.load('g_new')
+
+	    g *=1.0e5
+            self.save('g_new',g)
+
+	    mu = self.loadtxt('alpha')
+	    #if self.iter > 2:
+	    #    mu = -self.dot(g_old,p_old)/self.dot(p_old,p_old)
+
+	    if mu > 10:
+		mu = 10.0
+
+	    if mu < 1.0e-4:
+		mu = 1.0e-4
+
+	    print 'mu =', mu
+	    dghat = -g + g_old
+	    yhat = mu * g_old - dghat
+
+	    kk = self.iter - 1
+	    w = self.update_w(yhat,kk-1)
+	    self.save('w',w)
+	    unix.mv('w','w_%04d' % kk)
+
+            ShatT_ghat = self.load('ShatT_ghat')
+	    belta = - w + mu * ShatT_ghat
+	    a = self.dot(w,belta)
+	    b = self.dot(w,w)
+	    nu = self.srvm_nu(a,b)
+	    print 'a,b,ratio,nu', a,b,b/a,nu
+
+	    self.savetxt('a',a)
+	    unix.mv('a','a_%04d' % kk)
+
+	    self.savetxt('nu',nu)
+	    unix.mv('nu','nu_%04d' % kk)
+
+
+    #def update_coef(self):
+	
+	
+    def srvm_nu(self,a,b):
+        """ Determine nu
+        """
+	ratio = b / a
+	#print 'ratio =',ratio
+
+	if ratio > 1:
+	    #nu = (1 -np.sqrt(abs(1 + ratio))) / ratio
+	    nu = -1
+	elif abs(ratio) < 1.0e-8:
+	    nu = 1.0
+	else:
+	    nu = -(1 -np.sqrt(1 - ratio)) / ratio
+	return nu
+
+
+    def update_w(self,chi,kk):
+        """ Updates SRVM algorithm history
+        """
+
+        self.path=PATH.OPTIMIZE
+        unix.cd(self.path)
+		
+	Shat_chi = chi
+
+	mm = 3
+
+        for ii in range(kk-mm,kk,1):
+	    jj = ii + 1
+
+	    if jj >= 1:
+    	        unix.cp('a_%04d' % jj,'A')
+	        a = self.loadtxt('A')
+
+		unix.cp('nu_%04d' % jj,'Nu')
+		nu = self.loadtxt('Nu')
+
+		unix.cp('w_%04d' % jj,'W')
+	       	wtemp = self.load('W')
+
+		    #print 'A,nu', A,nu
+
+	        xtemp = self.dot(wtemp,Shat_chi)
+		Shat_chi = Shat_chi - xtemp * nu / a * wtemp
+
+	return	Shat_chi
 
     def update_status(self):
         """ Updates line search status
@@ -362,7 +452,6 @@ class base(object):
           gradient direction
         """
         g = self.load('g_new')
-	self.savetxt('R',1)
         self.save('p_new', -g)
         self.savetxt('s_new', self.dot(g,g))
         self.restarted = 1

@@ -16,7 +16,7 @@ export PYTHONPATH=$PYTHONPATH:$WD/problems
 rm -rf $WD/output* $WD/scratch 
 
 # test SRVM
-sfrun --workdir=$WD --parameter_file=$WD/parameters_SRVM --path_file=$WD/paths
+sfrun --workdir=$WD --parameter_file=$WD/parameters_LBFGS --path_file=$WD/paths
 #rm -rf $WD/output* $WD/scratch
 exit
 rm -rf $WD/output* $WD/scratch 

@@ -153,7 +153,6 @@ class test_optimize(object):
 
         savetxt('f_new',f)
         savenpy('g_new',g)
-
 	if PAR.OPTIMIZE in ['SRVM']:
 	    optimize.update_SRVM()
 

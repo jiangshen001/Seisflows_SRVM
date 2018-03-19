@@ -23,8 +23,14 @@ def add_noise(traces, time_scheme, snr = 10.0):
     nt, dt, _ = time_scheme
     nr = len(traces)
 
+    tmp_max = 0
     for ir in range(nr):
-        tmp_max = max(abs(traces[ir].data))
+        tmp = max(abs(traces[ir].data))
+        if tmp_max < tmp:
+            tmp_max = tmp
+
+    for ir in range(nr):
+        #tmp_max = max(abs(traces[ir].data))
         scale = (1.0/snr)*(tmp_max/1.414)/np.linalg.norm(traces[ir].data, ord=2)
         noise = np.random.normal(0,1,nt)
         traces[ir].data += scale*noise

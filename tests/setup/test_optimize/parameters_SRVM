@@ -1,0 +1,8 @@
+
+WORKFLOW='test_optimize'
+SYSTEM='serial'
+OPTIMIZE='SRVM'
+STEPMAX=40
+BEGIN=1              
+END=200
+
