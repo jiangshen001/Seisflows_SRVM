@@ -9,6 +9,8 @@ The full name of SRVM is square-root variable metric, which originates from DFP,
 
 SRVM based FWI allows for a posterior uncertainty estimation after the acoustic/elastic inversion.
 
+SRVM works in a matrix-free vector version in elastic FWI, making it memory-afforadable.
+
 Documentation about the algorithm in Seisflows_SRVM is available online at readthedocs.org, except for an addtional option: SRVM. 
 
 One manuscript about how SRVM works during FWI will be under review in GJI soon.
