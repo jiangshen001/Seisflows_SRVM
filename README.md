@@ -5,6 +5,8 @@ SeisFlows_SRVM is a special version of SeisFlows.
 
 SeisFlows_SRVM contains SRVM, an additional optimization algorithm, in addition to SD, CG and L-BFGS in the original Seisflows.
 
+The full name of SRVM is square-root variable metric, which originates from DFP, the dual of BFGS.
+
 SRVM based FWI allows for a posterior uncertainty estimation after the acoustic/elastic inversion.
 
 Documentation about the algorithm in Seisflows_SRVM is available online at readthedocs.org, except for an addtional option: SRVM. 
