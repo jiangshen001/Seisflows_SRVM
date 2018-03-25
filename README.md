@@ -13,11 +13,11 @@ SRVM works in a matrix-free vector version in elastic FWI, making it memory-affo
 
 Documentation about the algorithm in Seisflows_SRVM is available online at readthedocs.org, except for an addtional option: SRVM. 
 
-One manuscript about how SRVM works during FWI will be under review in GJI soon.
+One manuscript about how SRVM works during FWI is in preparation, and will be submited to GJI soon.
 
 The codes for uncertainty estimation are written in Matlab. The posterior analysis part includes RSVD-SRVM, standard deviation map, eigenvectors and eigenvalues of the inverse Hessian, 2D Gaussian random samplers, 2D posterior sampling, marginal distributions, and null space. Please find the Matlab codes in folder ./Uncertainty_analysis_example-Marmousi- 
 
-One manuscript about the theories and methods on uncertainty estimation in Seisflows_SRVM will be under review in GJI soon.
+One manuscript about the theories and methods on uncertainty estimation in Seisflows_SRVM is in preparation, and will be submited to GJI soon.
 
 ==================================================================================================================================
 
