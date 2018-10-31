@@ -1,5 +1,6 @@
 SeisFlows_SRVM
 =================
+=================update@Oct 31, 2018, 3D local-scale SRMV testings have been basically finished.
 
 SeisFlows_SRVM is a special version of SeisFlows.
 
