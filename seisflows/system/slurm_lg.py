@@ -136,16 +136,20 @@ class slurm_lg(custom_import('system', 'base')):
     def mpiexec(self):
         """ Specifies MPI exectuable; used to invoke solver
         """
-        return 'srun '
+        return 'srun'
 
 
     def getnode(self):
         """ Gets number of running task
         """
-        try:
+        if os.getenv('SLURM_ARRAY_TASK_ID'):
             return int(os.getenv('SLURM_ARRAY_TASK_ID'))
-        except:
-            raise Exception("TASK_ID environment variable not defined.")
+        else:
+            try:
+                return int(os.getenv('TASKID'))
+            except:
+                raise Exception("TASKID environment variable not defined.")
+
 
 
     ### job array methods
@@ -168,13 +172,19 @@ class slurm_lg(custom_import('system', 'base')):
 
 
     def job_array_cmd(self, classname, funcname, hosts):
+
+        if funcname == 'eval_grad':
+                TKtime =  PAR.TASKTIME*2
+        else:
+                TKtime =  PAR.TASKTIME
+
         return ('sbatch '
                 + '%s ' % PAR.SLURMARGS
                 + '--job-name=%s ' % PAR.TITLE
                 + '--nodes=%d ' % math.ceil(PAR.NPROC/float(PAR.NODESIZE))
                 + '--ntasks-per-node=%d ' % PAR.NODESIZE
                 + '--ntasks=%d ' % PAR.NPROC
-                + '--time=%d ' % PAR.TASKTIME
+                + '--time=%d ' % TKtime
                 + self.job_array_args(hosts)
                 + findpath('seisflows.system') +'/'+ 'wrappers/run '
                 + PATH.OUTPUT + ' '
@@ -202,16 +212,25 @@ class slurm_lg(custom_import('system', 'base')):
         """ Determines completion status of one or more jobs
         """
         states = []
-        for job in jobs:
+        for getnode, job in enumerate(jobs):
             state = self._query(job)
             self._print(' '.join((timestamp(), job, state)))
 
             if state in ['TIMEOUT']:
-                print msg.TimoutError % (classname, funcname, job, PAR.TASKTIME)
+                print msg.TimeoutError % (classname, funcname, job, PAR.TASKTIME)
                 sys.exit(-1)
             elif state in ['FAILED', 'NODE_FAIL']:
-                print msg.TaskError_SLURM % (classname, funcname, job)
-                sys.exit(-1)
+                print ' task %d failed, retrying' % getnode
+
+		if funcname == 'eval_grad':
+		        print msg.TaskError_SLURM % (classname, funcname, job)
+			self.resubmit_failed_job(job)
+		        states += [0]
+		else:
+		        print msg.TaskError_SLURM % (classname, funcname, job)
+			sys.exit(-1)
+
+
             elif state in ['COMPLETED']:
                 states += [1]
             else:
@@ -220,6 +239,60 @@ class slurm_lg(custom_import('system', 'base')):
         isdone = all(states)
 
         return isdone, jobs
+
+    def resubmit_failed_job(self,job):
+        call('scontrol requeue '
+                + job)
+
+    def resubmit_failed_job_new(self, classname, funcname, jobs, getnode):
+        with open(PATH.SYSTEM+'/'+'job_id', 'w') as file:
+            call(self.resubmit_cmd(classname, funcname, getnode),
+                stdout=file)
+
+        with open(PATH.SYSTEM+'/'+'job_id', 'r') as file:
+            line = file.readline()
+            jobid = line.split()[-1].strip()
+
+        # remove failed job from list
+        jobs.pop(getnode)
+
+        # add resubmitted job to list
+        jobs.insert(getnode, jobid)
+        return jobs
+
+
+    def resubmit_failed_job_new(self, classname, funcname, jobs, getnode):
+        with open(PATH.SYSTEM+'/'+'job_id', 'w') as file:
+            call(self.resubmit_cmd(classname, funcname, getnode),
+                stdout=file)
+
+        with open(PATH.SYSTEM+'/'+'job_id', 'r') as file:
+            line = file.readline()
+            jobid = line.split()[-1].strip()
+
+        # remove failed job from list
+        jobs.pop(getnode)
+
+        # add resubmitted job to list
+        jobs.insert(getnode, jobid)
+        return jobs
+
+
+    def resubmit_cmd(self, classname, funcname, getnode):
+        return ('sbatch '
+                + '%s ' % PAR.SLURMARGS
+                + '--job-name=%s ' % PAR.TITLE
+                + '--nodes=%d ' % math.ceil(PAR.NPROC/float(PAR.NODESIZE))
+                + '--ntasks-per-node=%d ' % PAR.NODESIZE
+                + '--ntasks=%d ' % PAR.NPROC
+                + '--time=%d ' % PAR.TASKTIME
+                + '--output=%s ' % (PATH.WORKDIR+'/'+'output.slurm/'+'%j')
+                + '--export=TASKID=%d ' % getnode
+                + findpath('seisflows.system') +'/'+ 'wrappers/run '
+                + PATH.OUTPUT + ' '
+                + classname + ' '
+                + funcname + ' ' 
+                + PAR.ENVIRONS)
 
 
     def _query(self, job):
