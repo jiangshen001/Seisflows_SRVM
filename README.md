@@ -23,6 +23,14 @@ The codes for uncertainty estimation are written in Matlab. The posterior analys
 Several SRMV-based manuscripts about the theories and methods of uncertainty estimation regarding acoustic/elastic FWI are in preparation, and will be submitted to GJIs and so on soon.
 
 One manuscript about SRVM-based null-space shuttle in elastic FWI is in preparation.
+
+Nov 1st,2018 ================================================================================================================
+simplest and robust fault tolerance solution
+
+When seisflows_3D runs on supercomputer, the faults usually occur in the adjoint modelings in which massive I/Os are greatly needed. The forward modeling parts are basically safe throughout the inversion.
+
+also, adjoint modeling is twice expensive as that of forward modeling, so we specify adaptive wall-time for them to make them more competitive in queuing on HPCs.
+
 ==================================================================================================================================
 
 SeisFlows is an open source seismic inversion package that
