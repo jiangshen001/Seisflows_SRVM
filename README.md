@@ -1,11 +1,11 @@
 SeisFlows_SRVM
 =================
 
-=================update@Nov 7st,2018
+=================update@Nov 7st, 2018
 
-3D local-scale SRVM numerical examples are oversized, but available upon request.
+3D local-scale SRVM numerical examples are oversized, but would be available upon request.
 
-=================update@Nov 1st,2018 
+=================update@Nov 1st, 2018 
 
 with checkpointing function for Seisflows_SRVM
 
