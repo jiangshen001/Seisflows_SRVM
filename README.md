@@ -13,7 +13,7 @@ with simplest and robust fault tolerance solution
 
 When seisflows_3D runs on supercomputer, the faults usually occur in the adjoint modelings in which massive I/Os are greatly needed. The forward modeling parts are basically safe throughout the inversion.
 
-also, adjoint modeling is twice expensive as that of forward modeling, so we specify adaptive wall-time for them to make them more competitive in queuing on HPCs.
+also, adjoint modeling is twice expensive as that of forward modeling, so we specify adaptive wall-times to make them more competitive in queuing on HPCs.
 
 suggest using I/O optimisation softwares when run it on HPCs
 
