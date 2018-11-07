@@ -1,5 +1,22 @@
 SeisFlows_SRVM
 =================
+
+=================update@Nov 7st,2018
+
+3D local-scale SRVM numerical examples are oversized, but available upon request.
+
+=================update@Nov 1st,2018 
+
+with checkpointing function for Seisflows_SRVM
+
+with simplest and robust fault tolerance solution
+
+When seisflows_3D runs on supercomputer, the faults usually occur in the adjoint modelings in which massive I/Os are greatly needed. The forward modeling parts are basically safe throughout the inversion.
+
+also, adjoint modeling is twice expensive as that of forward modeling, so we specify adaptive wall-time for them to make them more competitive in queuing on HPCs.
+
+suggest using I/O optimisation softwares when run it on HPCs
+
 =================update@Oct 31, 2018, 3D local-scale SRMV testings have been basically finished.
 
 SeisFlows_SRVM is a special version of SeisFlows.
@@ -23,20 +40,6 @@ The codes for uncertainty estimation are written in Matlab. The posterior analys
 Several SRMV-based manuscripts about the theories and methods of uncertainty estimation regarding acoustic/elastic FWI are in preparation, and will be submitted to GJIs and so on soon.
 
 One manuscript about SRVM-based null-space shuttle in elastic FWI is in preparation.
-
-Nov 1st,2018 ================================================================================================================
-
-with checkpointing function for Seisflows_SRVM
-
-with simplest and robust fault tolerance solution
-
-When seisflows_3D runs on supercomputer, the faults usually occur in the adjoint modelings in which massive I/Os are greatly needed. The forward modeling parts are basically safe throughout the inversion.
-
-also, adjoint modeling is twice expensive as that of forward modeling, so we specify adaptive wall-time for them to make them more competitive in queuing on HPCs.
-
-suggest using I/O optimisation softwares when run it on HPCs
-
-==================================================================================================================================
 
 SeisFlows is an open source seismic inversion package that
 
