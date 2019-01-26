@@ -12,6 +12,7 @@ from seisflows.tools import signal
 
 PAR = sys.modules['seisflows_parameters']
 PATH = sys.modules['seisflows_paths']
+#optimize = sys.modules['seisflows_optimize']
 
 class base(object):
     """ Data preprocessing class
@@ -86,19 +87,24 @@ class base(object):
 
             # process observations
 	    #print "before the filtering"
-            obs = self.apply_filter(obs)
-            obs = self.apply_mute(obs)
-            obs = self.apply_normalize(obs)
+            #obs = self.apply_filter(obs)
+            #obs = self.apply_mute(obs)
+            #obs = self.apply_normalize(obs)
+            #obs = self.agc(obs)
             #obs = self.reweight_trace(obs)
             #obs = self.add_noise(obs)
             #obs = self.filter_noise(obs)
             #obs = self.reweight_trace1(obs)
             # process synthetics
-            syn = self.apply_filter(syn)
-            syn = self.apply_mute(syn)
-            syn = self.apply_normalize(syn)
+            #syn = self.apply_filter(syn)
+            #syn = self.apply_mute(syn)
+            #syn = self.apply_normalize(syn)
+            #syn = self.agc(syn)
             #syn = self.reweight_trace(syn)
             #syn = self.reweight_trace1(syn)
+
+            #obs,syn = self.apply_normalize_new(obs, syn)
+
             if PAR.MISFIT:
                 self.write_residuals(path, syn, obs)
 
@@ -181,6 +187,12 @@ class base(object):
         traces = signal.add_noise(traces,
             self.get_time_scheme(traces),
             10.0)
+
+        return traces
+
+    def agc(self, traces):
+        traces = signal.agc(traces,
+            self.get_time_scheme(traces))
 
         return traces
 
@@ -280,6 +292,28 @@ class base(object):
 
         return traces
 
+    def apply_normalize_new(self, traces0, traces):
+        if not PAR.NORMALIZE:
+            return traces0, traces
+
+        if 'NormalizeTracesL2_Together' in PAR.NORMALIZE:
+            # normalize each trace by its L2 norm
+            for tr0,tr in zip(traces0,traces):
+                w = np.linalg.norm(tr0.data, ord=2)
+                if w > 0:
+                    tr0.data /= w
+                    tr.data  /= w
+
+        elif 'NormalizeTracesL1_Together' in PAR.NORMALIZE:
+            # normalize each trace by its L2 norm
+            for tr0,tr in zip(traces0,traces):
+                w = np.linalg.norm(tr0.data, ord=1)
+                if w > 0:
+                    tr0.data /= w
+                    tr.data  /= w
+
+        return traces0, traces
+
 
     def apply_filter_backwards(self, traces):
         for tr in traces:
@@ -362,10 +396,12 @@ class base(object):
 
     def check_normalize(self):
         assert getset(PAR.NORMALIZE) < set([
+            'NormalizeTracesL1_Together',
+            'NormalizeTracesL2_Together',
             'NormalizeTracesL1',
             'NormalizeTracesL2',
             'NormalizeEventsL1',
-            'NormalizeEventsL2'])
+            'NormalizeEventsL2',])
 
 
     ### utility functions
