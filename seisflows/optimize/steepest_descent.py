@@ -38,7 +38,7 @@ class steepest_descent(custom_import('optimize', 'base')):
             p_new = -g_new
 
         self.save('p_new', p_new)
-        savetxt('s_new', self.dot(g_new, p_new))
+        self.savetxt('s_new', self.dot(g_new, p_new))
 
         return p_new
 
